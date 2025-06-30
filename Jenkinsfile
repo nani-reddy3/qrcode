@@ -1,42 +1,43 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "qrgenerator-app"
-        CONTAINER_NAME = "qrgenerator-container"
-    }
-
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build App') {
             steps {
                 bat 'echo Building on Windows'
+                bat 'mvn clean package' // ADD THIS LINE
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                bat 'docker build -t %IMAGE_NAME% .'
+                bat 'docker build -t qrgenerator-app .'
             }
         }
 
         stage('Stop Old Container') {
+            when {
+                expression { return currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
             steps {
-                echo 'Stopping old container if exists...'
-                bat '''
-                    docker stop %CONTAINER_NAME%
-                    IF %ERRORLEVEL% NEQ 0 echo Container not running
-
-                    docker rm %CONTAINER_NAME%
-                    IF %ERRORLEVEL% NEQ 0 echo Container not found or already removed
-                '''
+                bat 'docker stop qrgenerator-app || echo "Container not running"'
+                bat 'docker rm qrgenerator-app || echo "Container not found"'
             }
         }
 
         stage('Run Docker Container') {
+            when {
+                expression { return currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
             steps {
-                echo 'Running container...'
-                bat 'docker run -d -p 8080:8080 --name %CONTAINER_NAME% %IMAGE_NAME%'
+                bat 'docker run -d -p 8080:8080 --name qrgenerator-app qrgenerator-app'
             }
         }
     }
