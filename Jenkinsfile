@@ -8,9 +8,8 @@ pipeline {
 
     stages {
         stage('Build App') {
-            steps {
-                echo 'Building Spring Boot app...'
-                sh 'mvn clean package -DskipTests'
+             steps {
+                bat 'echo Building on Windows'
             }
         }
 
