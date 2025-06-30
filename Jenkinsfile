@@ -8,7 +8,7 @@ pipeline {
 
     stages {
         stage('Build App') {
-             steps {
+            steps {
                 bat 'echo Building on Windows'
             }
         }
@@ -16,16 +16,19 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t $IMAGE_NAME .'
+                bat 'docker build -t %IMAGE_NAME% .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
                 echo 'Stopping old container if exists...'
-                sh '''
-                    docker stop $CONTAINER_NAME || true
-                    docker rm $CONTAINER_NAME || true
+                bat '''
+                    docker stop %CONTAINER_NAME%
+                    IF %ERRORLEVEL% NEQ 0 echo Container not running
+
+                    docker rm %CONTAINER_NAME%
+                    IF %ERRORLEVEL% NEQ 0 echo Container not found or already removed
                 '''
             }
         }
@@ -33,7 +36,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 echo 'Running container...'
-                sh 'docker run -d -p 8080:8080 --name $CONTAINER_NAME $IMAGE_NAME'
+                bat 'docker run -d -p 8080:8080 --name %CONTAINER_NAME% %IMAGE_NAME%'
             }
         }
     }
