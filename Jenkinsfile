@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         // Assumes Maven was added in Jenkins > Global Tool Configuration as 'Maven3.9'
-        maven 'Maven3.9'
+        maven 'Maven3.9.10'
     }
 
     environment {
