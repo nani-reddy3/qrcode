@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        // Assumes Maven was added in Jenkins > Global Tool Configuration as 'Maven3.9'
+        // Ensure 'Maven3.9.10' is defined in Jenkins > Global Tool Configuration
         maven 'Maven3.9.10'
     }
 
@@ -35,8 +35,19 @@ pipeline {
 
         stage('Stop Old Container') {
             steps {
-                bat "docker stop %CONTAINER_NAME% || echo Container not running"
-                bat "docker rm %CONTAINER_NAME% || echo Container not found"
+                script {
+                    try {
+                        bat "docker stop %CONTAINER_NAME%"
+                    } catch (e) {
+                        echo "No running container to stop."
+                    }
+
+                    try {
+                        bat "docker rm %CONTAINER_NAME%"
+                    } catch (e) {
+                        echo "No container to remove."
+                    }
+                }
             }
         }
 
