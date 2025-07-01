@@ -12,17 +12,18 @@
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # ============for war file============
-# Use an official Tomcat base image
+# Use an official Tomcat image with Java 17
 FROM tomcat:9.0-jdk17-temurin
 
-# Remove the default ROOT web app
+# Clean default webapp
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Copy your WAR file to the webapps directory
+# Copy WAR as ROOT.war (auto-deploys on Tomcat startup)
 COPY target/QRgenerator-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
-# Expose the default Tomcat port
+# Expose port
 EXPOSE 8080
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
+
