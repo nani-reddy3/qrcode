@@ -11,6 +11,7 @@
 	<groupId>com.QRgenerator</groupId>
 	<artifactId>QRgenerator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>QRgenerator</name>
 	<description>QRgenerator project for Spring Boot</description>
 	<properties>
