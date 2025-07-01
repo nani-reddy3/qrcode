@@ -88,6 +88,13 @@ pipeline {
             }
         }
 
+        stage('Verify WAR File') {
+            steps {
+                bat 'dir target'
+                bat 'if not exist target\\QRgenerator-0.0.1-SNAPSHOT.war exit 1'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image with WAR and Tomcat...'
