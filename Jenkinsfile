@@ -20,6 +20,7 @@ pipeline {
 
         stage('Build App') {
             steps {
+                bat 'mvn -version'
                 bat 'echo Building on Windows'
                 bat 'mvn clean package'
             }
