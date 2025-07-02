@@ -35,7 +35,8 @@ public class MainController {
 	@RequestMapping("/test")
 	public @ResponseBody String testingMethod() {
 		Date dt = new Date();
-		return dt.toString();		
+		return dt.toString();	
+			
 	}
 	
 	@RequestMapping(value="/qrreceive", method = RequestMethod.POST)
